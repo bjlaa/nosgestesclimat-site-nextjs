@@ -813,6 +813,9 @@
     fuse.js "^7.0.0"
     styled-components "^6.1.1"
 
+"@publicodes/tools@file:../tools/dist":
+  version "0.0.0"
+
 "@rollup/plugin-commonjs@24.0.0":
   version "24.0.0"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-24.0.0.tgz#fb7cf4a6029f07ec42b25daa535c75b05a43f75c"

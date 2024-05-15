@@ -36,7 +36,7 @@ export function generateSimulation({
 
   if (migrationInstructions) {
     const { situationMigrated, foldedStepsMigrated } = migrateSituation({
-      situation: simulation.situation as any,
+      situation: simulation.situation,
       foldedSteps: simulation.foldedSteps,
       migrationInstructions,
     })
