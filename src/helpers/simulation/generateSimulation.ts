@@ -1,5 +1,5 @@
-import { migrateSimulation } from '@/publicodes-state/helpers/migrateSimulation'
 import { MigrationType, Simulation } from '@/publicodes-state/types'
+import { migrateSituation } from '@publicodes/tools'
 import { v4 as uuidv4 } from 'uuid'
 
 export function generateSimulation({
@@ -19,7 +19,7 @@ export function generateSimulation({
 }: Partial<Simulation> & {
   migrationInstructions?: MigrationType
 } = {}): Simulation {
-  let simulation = {
+  const simulation = {
     id,
     date,
     situation,
@@ -35,10 +35,17 @@ export function generateSimulation({
   } as Simulation
 
   if (migrationInstructions) {
-    simulation = migrateSimulation({
-      simulation,
+    const { situationMigrated, foldedStepsMigrated } = migrateSituation({
+      situation: simulation.situation as any,
+      foldedSteps: simulation.foldedSteps,
       migrationInstructions,
     })
+
+    return {
+      ...simulation,
+      situation: situationMigrated,
+      foldedSteps: foldedStepsMigrated,
+    }
   }
 
   return simulation

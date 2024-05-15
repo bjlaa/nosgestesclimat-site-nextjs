@@ -1,9 +1,9 @@
-import { migrateSimulation } from '@/publicodes-state/helpers/migrateSimulation'
 import {
   LocalStorage,
   MigrationType,
   Simulation,
 } from '@/publicodes-state/types'
+import { migrateSituation } from '@publicodes/tools'
 import { captureException } from '@sentry/react'
 import { useEffect } from 'react'
 
@@ -19,11 +19,18 @@ function handleLocalStorageMigration(
 ) {
   try {
     const newSimulations = currentLocalStorage.simulations.map(
-      (simulation: Simulation) =>
-        migrateSimulation({
-          simulation,
+      (simulation: Simulation) => {
+        const { situationMigrated, foldedStepsMigrated } = migrateSituation({
+          situation: simulation.situation as any,
+          foldedSteps: simulation.foldedSteps,
           migrationInstructions,
         })
+        return {
+          ...simulation,
+          situation: situationMigrated,
+          foldedSteps: foldedStepsMigrated,
+        }
+      }
     )
 
     localStorage.setItem(
