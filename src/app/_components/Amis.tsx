@@ -2,12 +2,11 @@ import Trans from '@/components/translation/Trans'
 import { homeClickClassements } from '@/constants/tracking/pages/home'
 import ButtonLink from '@/design-system/inputs/ButtonLink'
 import Kicker from '@/design-system/layout/Kicker'
-import Image from 'next/image'
 
 export default async function Amis() {
   return (
     <div className="flex-1">
-      <Image
+      <img
         src="/images/illustrations/people-playing.svg"
         alt={'Des amis jouant à un jeu de société'}
         width="444"
