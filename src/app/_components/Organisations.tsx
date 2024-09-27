@@ -55,6 +55,7 @@ export default function Organisations() {
             width="603"
             height="332"
             alt={t('Groupe de personnes discutant devant un paperboard.')}
+            loading="lazy"
           />
         </div>
       </div>

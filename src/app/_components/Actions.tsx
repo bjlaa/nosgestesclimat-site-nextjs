@@ -15,6 +15,7 @@ export default async function Actions() {
         width="290"
         height="275"
         className="mb-6 block h-auto max-w-full "
+        loading="lazy"
       />
       <Kicker>
         <Trans>Agir pour le climat</Trans>
