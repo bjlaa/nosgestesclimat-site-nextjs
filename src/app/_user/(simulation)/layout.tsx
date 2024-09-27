@@ -4,6 +4,13 @@ import { PropsWithChildren } from 'react'
 
 export default function SimulateurLayout({ children }: PropsWithChildren) {
   const supportedRegions = getSupportedRegions()
+  /*
+
+  useTrackRegion()
+  useFixedRegion()
+  useUserInfosParams()
+  useInitSimulationParam()
+  */
 
   return <Providers supportedRegions={supportedRegions}>{children}</Providers>
 }

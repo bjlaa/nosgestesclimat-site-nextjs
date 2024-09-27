@@ -3,7 +3,6 @@
 import Link from '@/components/Link'
 import ColorLine from '@/design-system/layout/ColorLine'
 import DefaultLink from 'next/link'
-import { usePathname } from 'next/navigation'
 import { HTMLAttributes, JSX, PropsWithChildren } from 'react'
 import { twMerge } from 'tailwind-merge'
 
@@ -21,19 +20,13 @@ export default function NavLink({
   children,
   href,
   icon,
-  activeMatches,
   shouldUseDefaultLink = false,
   onClick,
   className,
   activeClassName,
   ...props
 }: PropsWithChildren<Props> & HTMLAttributes<HTMLAnchorElement>) {
-  const pathName = usePathname()
-
-  const isActive =
-    activeMatches?.some((matchString) => pathName.includes(matchString)) ||
-    pathName.includes(href)
-
+  const isActive = false
   const Tag = shouldUseDefaultLink ? DefaultLink : Link
 
   const Icon = icon || (() => null)

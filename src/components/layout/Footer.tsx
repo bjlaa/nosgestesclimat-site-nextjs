@@ -19,9 +19,8 @@ import {
 } from '@/constants/tracking/layout'
 import InlineLink from '@/design-system/inputs/InlineLink'
 import Separator from '@/design-system/layout/Separator'
-import { useLocale } from '@/hooks/useLocale'
 import { trackEvent } from '@/utils/matomo/trackEvent'
-import { usePathname } from 'next/navigation'
+import { Suspense } from 'react'
 import { twMerge } from 'tailwind-merge'
 import Link from '../Link'
 import Logo from '../misc/Logo'
@@ -29,10 +28,7 @@ import LanguageSwitchButton from '../translation/LanguageSwitchButton'
 import Trans from '../translation/Trans'
 
 export default function Footer({ className = '' }) {
-  const pathname = usePathname()
-  const locale = useLocale()
-
-  const isHomePage = pathname === '/' || pathname === `/${locale}`
+  const isHomePage = true
   return (
     <footer
       className={twMerge(
@@ -153,7 +149,9 @@ export default function Footer({ className = '' }) {
           <div className="flex flex-wrap justify-between gap-8 md:flex-row md:flex-nowrap">
             <div>
               <div className="mt-6 flex flex-wrap items-start justify-between gap-10">
-                <LanguageSwitchButton />
+                <Suspense fallback={null}>
+                  <LanguageSwitchButton />
+                </Suspense>
               </div>
 
               <div className="mt-4 text-xs">
