@@ -5,9 +5,9 @@ import {
   homeMemorySuccess,
 } from '@/constants/tracking/pages/home'
 import { trackEvent } from '@/utils/matomo/trackEvent'
+import isMobile from 'is-mobile'
 import { useEffect, useState } from 'react'
 import DesktopIcon from './desktopCircles/DesktopIcon'
-
 type Props = {
   circles: {
     iconIndex: number
@@ -24,6 +24,14 @@ type Icon = {
   y: number
 }
 export default function DesktopCircles({ circles }: Props) {
+  const [shouldDisplay, setShouldDisplay] = useState(false)
+  console.log('isMobile', isMobile())
+  useEffect(() => {
+    if (!isMobile()) {
+      setShouldDisplay(true)
+    }
+  }, [])
+
   const [firstSelected, setFirstSelected] = useState<Icon | null>(null)
   const [secondSelected, setSecondSelected] = useState<Icon | null>(null)
 
@@ -61,6 +69,10 @@ export default function DesktopCircles({ circles }: Props) {
       }
     }
   }, [firstSelected, secondSelected])
+
+  if (!shouldDisplay) {
+    return null
+  }
 
   return (
     <div
