@@ -1,8 +1,5 @@
 // Initialise react-i18next
 import Footer from '@/components/layout/Footer'
-import '@/locales/initClient'
-import '@/locales/initServer'
-import { dir } from 'i18next'
 import Script from 'next/script'
 import { PropsWithChildren } from 'react'
 import MainLayoutProviders from './_components/MainLayoutProviders'
@@ -48,7 +45,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   const lang = 'fr'
 
   return (
-    <html lang={lang ?? ''} dir={dir(lang ?? '')}>
+    <html lang={lang ?? ''}>
       <head>
         <link rel="icon" href="/favicon.png" />
 

@@ -4,6 +4,10 @@ const withMDX = require('@next/mdx')({
   extension: /\.mdx$/,
 })
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const { withSentryConfig } = require('@sentry/nextjs')
 
 const redirects = require('./config/redirects.js')
@@ -91,5 +95,5 @@ const sentryConfig = [
 
 module.exports =
   process.env.NODE_ENV !== 'development'
-    ? withSentryConfig(withMDX(nextConfig), ...sentryConfig)
+    ? withSentryConfig(withBundleAnalyzer(withMDX(nextConfig)), ...sentryConfig)
     : nextConfig
