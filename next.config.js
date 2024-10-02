@@ -4,15 +4,13 @@ const withMDX = require('@next/mdx')({
   extension: /\.mdx$/,
 })
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
-
 const { withSentryConfig } = require('@sentry/nextjs')
 
 const redirects = require('./config/redirects.js')
 
 const remoteImagesPatterns = require('./config/remoteImagesPatterns.js')
+
+// const { sentryWebpackPlugin } = require('@sentry/webpack-plugin')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -25,13 +23,23 @@ const nextConfig = {
   async redirects() {
     return redirects
   },
-  webpack: (config) => {
+  webpack: (config, { dev, isServer }) => {
     if (config.cache) {
-      config.cache = Object.freeze({
-        type: 'memory',
-      })
-      config.cache.maxMemoryGenerations = 0
+      if (dev) {
+        // Development configuration
+        config.cache = {
+          type: 'filesystem',
+        }
+      } else {
+        // Use cache in production
+        config.cache = Object.freeze({
+          type: 'memory',
+        })
+        config.cache.maxMemoryGenerations = 0
+      }
     }
+
+    config.optimization.splitChunks.minSize = 300000
 
     // Add a rule for YAML files
     config.module.rules.push({
@@ -39,8 +47,24 @@ const nextConfig = {
       use: 'yaml-loader',
     })
 
+    // Enable source maps
+    if (!dev && !isServer) {
+      config.devtool = 'source-map'
+    }
+
+    // if (process.env.SENTRY_AUTH_TOKEN) {
+    //   config.plugins.push(
+    //     sentryWebpackPlugin({
+    //       authToken: process.env.SENTRY_AUTH_TOKEN_SOURCEMAPS,
+    //       org: 'betagouv',
+    //       project: 'nosgestesclimat-nextjs',
+    //     })
+    //   )
+    // }
+
     return config
   },
+  productionBrowserSourceMaps: true,
   experimental: {
     outputFileTracingExcludes: {
       '*': ['.next/cache/webpack', '.git/**/*', 'cypress/**/*'],
@@ -86,7 +110,7 @@ const sentryConfig = [
     tunnelRoute: '/monitoring',
 
     // Hides source maps from generated client bundles
-    hideSourceMaps: true,
+    hideSourceMaps: false,
 
     // Automatically tree-shake Sentry logger statements to reduce bundle size
     disableLogger: true,
@@ -95,5 +119,5 @@ const sentryConfig = [
 
 module.exports =
   process.env.NODE_ENV !== 'development'
-    ? withSentryConfig(withBundleAnalyzer(withMDX(nextConfig)), ...sentryConfig)
+    ? withSentryConfig(withMDX(nextConfig), ...sentryConfig)
     : nextConfig
