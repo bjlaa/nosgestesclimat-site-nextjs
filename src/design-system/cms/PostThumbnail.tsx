@@ -2,9 +2,8 @@
 
 import Trans from '@/components/translation/Trans'
 import { trackEvent } from '@/utils/matomo/trackEvent'
-import Image from 'next/image'
 import type { ReactNode } from 'react'
-import Badge from '../layout/Badge'
+import ImageWithCategory from './ImageWithCategory'
 
 export default function PostThumbnail({
   title,
@@ -26,21 +25,15 @@ export default function PostThumbnail({
       href={href}
       className="flex rounded-xl bg-white !no-underline !duration-500 md:flex-col md:transition-transform md:hover:translate-y-[-6px]"
       onClick={() => trackEvent(trackingEvent)}>
-      <div className="relative min-h-[134px] w-1/3 min-w-28 md:mb-4 md:min-h-[240px] md:w-auto">
-        <Image
-          src={imageSrc}
-          alt={imageAlt}
-          width={320}
-          height={240}
-          className="h-full w-full rounded-xl object-cover"
-        />
-        {/* Hidden on mobile */}
-        <div className="absolute left-2 top-2 hidden md:block ">
-          <Badge className="inline-block text-xs">{category}</Badge>
-        </div>
-      </div>
+      <ImageWithCategory
+        category={category}
+        imageSrc={imageSrc}
+        imageAlt={imageAlt}
+        imageClassName="min-h-[134px] w-1/3 min-w-28 md:min-h-[240px] md:w-full"
+        containerClassName="w-1/3 md:w-full"
+      />
 
-      <div className="flex flex-col">
+      <div className="mt-4 flex w-full flex-col">
         {/* Hidden on desktop */}
         <p className="mb-2 px-4 pt-4 text-xs font-bold text-primary-700 md:hidden md:text-[13px]">
           {category}
