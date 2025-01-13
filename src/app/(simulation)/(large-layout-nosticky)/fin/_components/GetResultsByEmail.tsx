@@ -14,11 +14,11 @@ import EmailInput from '@/design-system/inputs/EmailInput'
 import Card from '@/design-system/layout/Card'
 import Emoji from '@/design-system/utils/Emoji'
 import { getSaveSimulationListIds } from '@/helpers/brevo/getSaveSimulationListIds'
-import { useGetNewsletterSubscriptions } from '@/hooks/settings/useGetNewsletterSubscriptions'
 import { useSaveSimulation } from '@/hooks/simulation/useSaveSimulation'
 import { useClientTranslation } from '@/hooks/useClientTranslation'
 import { useLocale } from '@/hooks/useLocale'
 import { useMainNewsletter } from '@/hooks/useMainNewsletter'
+import { useFetchUserContact } from '@/hooks/users/useFetchUserContact'
 import { useCurrentSimulation, useUser } from '@/publicodes-state'
 import { formatEmail } from '@/utils/format/formatEmail'
 import { trackEvent } from '@/utils/matomo/trackEvent'
@@ -52,14 +52,12 @@ export default function GetResultsByEmail({
   // Avoid refetching useGetNewsletterSubscriptions when defining an email for the first time
   const emailRef = useRef<string>(user?.email ?? '')
 
-  const { data: newsletterSubscriptions } = useGetNewsletterSubscriptions(
-    emailRef?.current ?? ''
-  )
+  const { data: userContact } = useFetchUserContact(emailRef?.current ?? '')
 
   const isSubscribedMainNewsletter =
-    newsletterSubscriptions?.includes(LIST_MAIN_NEWSLETTER)
+    userContact?.listIds.includes(LIST_MAIN_NEWSLETTER)
 
-  const isSubscribedTransportNewsletter = newsletterSubscriptions?.includes(
+  const isSubscribedTransportNewsletter = userContact?.listIds.includes(
     LIST_NOS_GESTES_TRANSPORT_NEWSLETTER
   )
 
@@ -75,27 +73,27 @@ export default function GetResultsByEmail({
     mode: 'onSubmit',
   })
 
-  const isSubscribedLogementNewsletter = newsletterSubscriptions?.includes(
+  const isSubscribedLogementNewsletter = userContact?.listIds.includes(
     LIST_NOS_GESTES_LOGEMENT_NEWSLETTER
   )
 
   useEffect(() => {
-    if (!newsletterSubscriptions) return
+    if (!userContact) return
 
     setValue(
       'newsletter-saisonniere',
-      newsletterSubscriptions.includes(LIST_MAIN_NEWSLETTER)
+      userContact.listIds.includes(LIST_MAIN_NEWSLETTER)
     )
     setValue(
       'newsletter-transports',
-      newsletterSubscriptions.includes(LIST_NOS_GESTES_TRANSPORT_NEWSLETTER)
+      userContact.listIds.includes(LIST_NOS_GESTES_TRANSPORT_NEWSLETTER)
     )
 
     setValue(
       'newsletter-logement',
-      newsletterSubscriptions.includes(LIST_NOS_GESTES_LOGEMENT_NEWSLETTER)
+      userContact.listIds.includes(LIST_NOS_GESTES_LOGEMENT_NEWSLETTER)
     )
-  }, [newsletterSubscriptions, setValue])
+  }, [userContact, setValue])
 
   const { saveSimulation, isPending, isSuccess, isError, error } =
     useSaveSimulation()
